@@ -1,26 +1,31 @@
 import numpy as np
+from scipy.integrate import odeint
 from matplotlib import pyplot as plt
 
-Total=int(input("Input the number of iterations: "))
-Inside=0 #counts the number of darts inside the quarter circle
+L=int(input("Input evolutiontermination point: "))
+#Evolution termination
+x=np.linspace(0,L,50*L)
+#Solution parameter to a very high degree of accuracy
 
-x=np.linspace(0,1,500)
-y=np.sqrt(1-x**2) # to draw the quarter circle
+def GaussianODE (y, x):
+    u, v = y
+    duv = [v, -2*x*v]
+    return duv
+#Transforms the Gaussian (y=e^-x^2) into a system of linear, homogeneous, ordinary differential eqns
+#Let y=u'=v, y=e^-x^2 becomes u'=v and v'=-2xv. The limiting value of u as x->oo should be sqrt(Pi)/2
+#since integrating the Gaussian over [0,oo) gives that exact result
 
-plt.plot(x, y,'b-') #plots quarter circle
-plt.axes().set_aspect('equal') #sets axes to equal scales for a better presentation, this produces a warning but it can be ignored
-tt = plt.title(r'$\pi=${}'.format(4*Inside/1)) #displays the current value of "pi" on top of the plot
+y=odeint(GaussianODE, [0,1], x)
+#Solving the system of ODEs with initial conditions u(0)=0, v(0)=1
 
-for i in range(Total):
-    X = np.random.uniform(0, 1)
-    Y = np.random.uniform(0, 1) #Generate dart landing locations
-    if X*X+Y*Y<=1:
-        Inside+=1 #checks whether dart fell in the centre, the SQRT was omitted to improve performance since SQRT(1)=1
-    plt.plot(x, y,'b-') #replots circle to keep it visible in case of large amount of iterations
-    plt.plot(X, Y,'r.') #plot dart
-    plt.xlim([0, 1])
-    plt.ylim([0, 1]) #axes limits
-    tt.set_text(r'$\pi=${0:.25f}'.format(4*Inside/(i+1))) #update value of "pi"
-    plt.draw()
-    plt.pause(0.000001)
-print("\nPi = ",4*Inside/Total,"\n") #print final value of "pi"
+pie=y[y.shape[0]-1,0]
+#Extracting a potential value for "pi"
+
+plt.plot(x,y[:,0], label=r'$u(x)$')
+plt.plot(x,y[:,1], label=r'$v(x)$')
+plt.legend(loc='best')
+plt.show()
+#Plotting the evolution of the solutions. We expect v to be half a Gaussian and u to be asymptotic to sqrt(Pi)/2
+
+print(4*pie*pie)
+#The calculated value of "pi"
