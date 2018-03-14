@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-int main()
+int montecarlodartboard()
 {
     unsigned int i, c, in=0;
     double x,y,z, pi, i1, in1;
