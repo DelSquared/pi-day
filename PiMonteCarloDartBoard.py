@@ -1,3 +1,4 @@
+import numpy as np
 from matplotlib import pyplot as plt
  
 Total=int(input("Input the number of iterations: "))
