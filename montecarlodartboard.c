@@ -3,7 +3,7 @@
 #include <math.h>
 //Date created 14-3-2014
 
-int montecarlodartboard()
+int main()
 {
     unsigned int i, c, in=0;
     double x,y,z, pi, i1, in1;
